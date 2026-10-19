@@ -75,4 +75,8 @@ jobs:
           cache: true
       - run: flutter pub get
       - run: dart pub global activate pana
+      - name: Install screenshot inspection tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y webp
       - run: dart run tool/check_pana.dart

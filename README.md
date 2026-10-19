@@ -4,7 +4,7 @@ Hardware barcode input for Flutter on Android.
 
 [![pub package](https://img.shields.io/pub/v/barcode_port.svg)](https://pub.dev/packages/barcode_port)
 [![CI](https://github.com/bashar12-dev/barcode_port/actions/workflows/ci.yml/badge.svg)](https://github.com/bashar12-dev/barcode_port/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/bashar12-dev/barcode_port/blob/main/LICENSE)
 
 [Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©](https://github.com/bashar12-dev/barcode_port/blob/main/README.ar.md) Â· [API](https://pub.dev/documentation/barcode_port/latest/) Â· [Example](https://github.com/bashar12-dev/barcode_port/tree/main/example) Â· [Device qualification](https://github.com/bashar12-dev/barcode_port/blob/main/doc/device-compatibility.md)
 
