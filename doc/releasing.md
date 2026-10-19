@@ -44,15 +44,25 @@ or an unspecified successful-use report is not a replacement for these runs.
 dart run tool/verify_release.dart --version 1.0.0
 ```
 
-Do not tag or publish while this command fails. Update the compatibility table
-with actual qualified models only after these runs pass.
+Automated releases require this command to pass. Releases after 1.0.0 require
+completed physical qualification before tagging or publishing. Update the
+compatibility table with actual qualified models only after these runs pass.
+
+### First manual release decision: 1.0.0
+
+On 2026-10-20 the maintainer explicitly approved publishing 1.0.0 based on his
+reported successful use, while disclosing that the device models, Android
+versions, transport coverage and detailed qualification results are unknown.
+This is a documented exception for the first manual release only; it is not
+evidence that the physical qualification gate passed. No model is certified.
+The automated physical gate remains strict and no test results are fabricated.
 
 ## First publication
 
 - [ ] Set the GitHub default branch to `main`, enable private vulnerability reporting, and protect release tags if available.
 - [ ] Verify the MIT notice and third-party provenance; no manufacturer SDK is bundled.
 - [ ] Keep `PUB_PUBLISH_ENABLED` unset/false until the first manual publication succeeds.
-- [ ] Commit the complete candidate, check a clean Git status, and verify all release gates.
+- [ ] Commit the complete candidate, check a clean Git status, and verify all automated quality checks and the first-release decision above.
 - [ ] Create `v1.0.0`, matching `pubspec.yaml`.
 - [ ] Sign in with the owner's Google account and run `flutter pub publish` from the tagged package root.
 - [ ] Verify the pub.dev page, API docs, example, license, and scores.
@@ -67,7 +77,9 @@ problem using a new patch version; do not re-use a published version number.
 Configure pub.dev automated publication for `bashar12-dev/barcode_port` and the
 exact pattern `v{{version}}`. Create a GitHub `pub.dev` environment and require
 maintainer approval where the account supports it. Protect matching release tags.
-Then enable repository variable `PUB_PUBLISH_ENABLED=true`.
+Complete the physical qualification records before enabling repository variable
+`PUB_PUBLISH_ENABLED=true`. While this variable is false, the tag workflow skips
+its jobs; the first release is published manually.
 
 The release workflow requires successful CI, matching tag/version, and passing
 hardware records before its publish job runs. OIDC grants a short-lived credential
