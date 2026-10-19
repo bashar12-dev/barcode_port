@@ -16,6 +16,13 @@ commit and archive before uploading; package versions cannot be overwritten.
 - [ ] Archive includes LICENSE, public docs, example, native and generated source; no secrets or parent application files.
 - [ ] Repository, issue tracker, documentation, image, and license URLs resolve publicly.
 
+The current Pana baseline is **150/160**. Its ten-point dependency-freshness
+deduction is caused by Flutter stable's pinned `meta` and
+`material_color_utilities` versions, despite compatible package constraints.
+Do not override Flutter's SDK pins to change a score. The automated allowance is
+ten points; all independent analysis, documentation, test, build, and archive
+checks must still pass. Revisit this allowance when Flutter updates those pins.
+
 ## Physical device gate
 
 Complete real Android runs for **both** `hid` and `iminBroadcast`. Record device

@@ -28,7 +28,9 @@ Future<void> main() async {
       '--dartdoc-version',
       '9.0.11',
       '--exit-code-threshold',
-      '0',
+      // Flutter stable pins meta/material_color_utilities behind pub's latest
+      // releases. Keep the measured 150/160 floor without overriding SDK pins.
+      '10',
       source.path,
     ]);
   }
