@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.0
+
+- Receive keyboard-wedge HID and Android iMin broadcast input through one API.
+- Preserve a distinct event identity and UTC timestamp for each observed frame.
+- Manage screen and application eligibility with the optional ScannerListener.
+- Offer opt-in normalization, filtering, and consecutive-repeat suppression.
+- Report discarded input without including barcode text in diagnostics.
+- Document lifecycle ownership, focus behavior, and device qualification.
+- Include an independent Android example, bilingual guides, and release checks.
+
 ## 0.3.0
 
 - Provide barcode_port.dart as the entry point for the high-level API.

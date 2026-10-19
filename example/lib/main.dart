@@ -30,7 +30,11 @@ class _ScannerExampleState extends State<ScannerExample> {
   BarcodeScanner _createScanner() =>
       widget.scanner ??
       Scanner(
-        options: const ScannerOptions(configureIminOutput: true),
+        options: const ScannerOptions(
+          configureIminOutput: bool.fromEnvironment(
+            'BARCODE_PORT_CONFIGURE_IMIN_OUTPUT',
+          ),
+        ),
         processing: widget.useProcessing
             ? ScanProcessingOptions(
                 normalize: (value) => value.toUpperCase(),

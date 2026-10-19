@@ -1,246 +1,235 @@
 # BarcodePort
 
-Hardware barcode input for Flutter.
+Hardware barcode input for Flutter on Android.
 
-واجهة موحّدة لاستقبال قراءات أجهزة الباركود في تطبيقات Flutter.
+[![pub package](https://img.shields.io/pub/v/barcode_port.svg)](https://pub.dev/packages/barcode_port)
+[![CI](https://github.com/bashar12-dev/barcode_port/actions/workflows/ci.yml/badge.svg)](https://github.com/bashar12-dev/barcode_port/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-Reusable Flutter barcode input with keyboard-wedge HID and Android iMin
-broadcasts. No checkout models, Riverpod, database, ECR, or payment dependencies.
+[Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©](https://github.com/bashar12-dev/barcode_port/blob/main/README.ar.md) Â· [API](https://pub.dev/documentation/barcode_port/latest/) Â· [Example](https://github.com/bashar12-dev/barcode_port/tree/main/example) Â· [Device qualification](https://github.com/bashar12-dev/barcode_port/blob/main/doc/device-compatibility.md)
 
-## Use
+Receive keyboard-wedge HID input and Android iMin broadcasts through one API.
+A focused text field is not required. Keep product lookup, inventory, and checkout
+rules in your application.
 
-Add this package as a path or Git dependency and import the high-level API:
+- A distinct event ID and UTC timestamp for every observed scan.
+- Optional screen/app lifecycle management with `ScannerListener`.
+- Opt-in normalization, filtering, and consecutive-repeat suppression.
+- Typed diagnostics without barcode contents or automatic barcode logging.
+- One active input owner, with asynchronous start, stop, and cleanup.
+
+![BarcodePort example displaying scan 123](https://raw.githubusercontent.com/bashar12-dev/barcode_port/main/doc/images/example.png)
+
+## Support and requirements
+
+| Input | Android | Notes |
+|---|---|---|
+| Keyboard-wedge HID | Implemented | USB or Bluetooth readers configured to send keyboard input; Enter or Tab suffix by default. |
+| iMin broadcasts | Implemented | Requires a compatible broadcast action/payload and device configuration. |
+| Web HID demonstration | Example only | Exercises keyboard input; not an additional certified platform. |
+
+See the [qualification records](https://github.com/bashar12-dev/barcode_port/blob/main/doc/device-compatibility.md) for actual tested
+models and release status. An implementation is not a guarantee for every device.
+Camera scanning, BLE/SPP protocols, USB serial, scanner discovery, GS1 parsing,
+and background reception are outside the package's current scope.
+
+Requires Dart **3.10.7+**, Flutter **3.38.6+**, Android **API 24+**,
+compileSdk **36**, and Java/Kotlin target **17**. Android is the declared plugin
+platform. Native iMin support is not available on web, iOS, or desktop.
+
+## Install
+
+```sh
+flutter pub add barcode_port
+```
+
+Or add:
 
 ```yaml
 dependencies:
-  barcode_port:
-    path: packages/barcode_port
+  barcode_port: ^1.0.0
 ```
+
+## Quick start
+
+This complete example owns the scanner for the screen and handles input errors:
+
+```dart
+import 'package:barcode_port/scanner_widgets.dart';
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MaterialApp(
+    home: Scaffold(
+      body: ScannerListener(
+        createScanner: () => Scanner(),
+        onScan: (scan) => debugPrint('Read: ${scan.barcode}'),
+        onError: (error, stack) => FlutterError.reportError(
+          FlutterErrorDetails(exception: error, stack: stack),
+        ),
+        child: const Center(child: Text('Ready to scan')),
+      ),
+    ),
+  ));
+}
+```
+
+The explicit `debugPrint` is demonstration application code; remove it if barcode
+contents must not be logged. The package does not log barcode values itself.
+
+`ScannerListener` creates one source per State and owns its start/stop/dispose.
+Reception requires `enabled`, the current route, and a resumed app. Covering the
+screen with a page/dialog or moving the app to the background pauses reception.
+Set `enabled` from tab visibility for hidden tabs and nested navigators.
+
+Use a new widget key to supply a different source. Finish old-owner cleanup before
+starting another owner; simultaneous owners fail instead of stealing reception.
+The source factory is not re-run when options or callbacks change during rebuild.
+
+## Direct lifecycle
+
+Use the headless API when your application owns the asynchronous lifetime:
 
 ```dart
 import 'package:barcode_port/barcode_port.dart';
 
-final scanner = Scanner(
-  options: const ScannerOptions(
-    mode: ScannerMode.auto,
-    configureIminOutput: true,
-  ),
-);
-
-final subscription = scanner.events.listen(
-  (scan) {
-    // eventId, barcode, occurredAt (UTC).
-    // Map this reading into your application's own model here.
-    print(scan.barcode);
-  },
-  onError: (Object error, StackTrace stack) {
-    // Present or log an input error in your application.
-  },
-);
-
-await scanner.start();
-// Later: await scanner.stop(); await scanner.start();
-// When this owner is permanently finished:
-await subscription.cancel();
-await scanner.dispose();
+Future<void> readUntil(Future<void> finished) async {
+  final scanner = Scanner();
+  final subscription = scanner.events.listen(
+    (scan) => print('${scan.eventId}: ${scan.barcode}'),
+    onError: (Object error, StackTrace stack) {
+      // Report an operational error in your application.
+    },
+  );
+  try {
+    await scanner.start();
+    await finished;
+  } finally {
+    await subscription.cancel();
+    await scanner.dispose();
+  }
+}
 ```
 
-Handle failures of start/stop/dispose as well as stream errors. A failed start
-cleans up acquired resources and permits retry. If cleanup itself fails, retry
-stop/dispose; another owner must not take the native receiver before cleanup
-succeeds. Lifecycle operations are serialized; stop waits for pending startup
-and leaves no active input when it completes. Dispose prevents future starts,
-releases owned input, and closes events. Cancel or resume paused event
-subscriptions before awaiting disposal, since paused listeners can delay stream
-completion.
+Subscribe **before** start to retain startup frames. `stop` waits for pending
+startup and permits a later start. `dispose` permanently releases the source and
+closes its streams. Cancel or resume paused subscriptions before awaiting disposal.
+Start/stop/dispose futures can fail in addition to stream errors. Retry cleanup
+when it fails; ownership is retained until resources can be released safely.
 
-Use one Scanner owner for the application's active scan area. Multiple listeners
-on its events are supported; each observes the same scan identity. The package
-rejects competing Scanner/ResolvingScanner owners across transports within the
-Dart isolate. Direct HID and iMin transports also guard their respective input
-resources. Engines have their own plugin instances; coordinating several engines
-or simultaneous physical scanners is outside the current ownership contract.
-
-See [the standalone example](example/lib/main.dart). It has its own Android host
-and depends only on this package. It is not wired to the checkout project.
-
-## Input policy
+## Input policy and focus
 
 | Option | Default | Meaning |
 |---|---|---|
-| mode | auto | Prefer iMin broadcasts when host metadata looks like iMin; use HID when inspection fails or does not prefer iMin |
-| configureIminOutput | false | Explicitly request broadcast output and disable analog keyboard output when using the iMin transport |
-| frameTimeout | 2 seconds | Discard an incomplete HID frame after an inter-character gap |
-| terminators | Enter, Tab | Complete the current HID frame |
-| maxFrameLength | 4096 UTF-16 code units | Discard an oversized HID frame through its terminator or idle timeout |
-| passThroughEditableText | true | Leave hardware keys to an editable field while it has focus |
+| `mode` | `ScannerMode.auto` | Prefer iMin on matching host metadata; otherwise HID. |
+| `configureIminOutput` | `false` | Explicitly request broadcast output configuration on iMin. |
+| `frameTimeout` | 2 seconds | Discard an incomplete HID frame after an inter-character gap. |
+| `terminators` | Enter, Tab | Complete the current HID frame. |
+| `maxFrameLength` | 4096 UTF-16 units | Discard an oversized HID frame through its boundary. |
+| `passThroughEditableText` | `true` | Leave keyboard input to the focused editable field. |
 
-Use ScannerMode.hid or ScannerMode.iminBroadcast to bypass host heuristics. Auto
-selects one transport per start; it does not silently switch after a start error
-or infer hardware failure from a period without scans. Setting
-configureIminOutput changes device output settings and stop does not restore the
-previous settings. The configuration response is a host heuristic, not a device
-acknowledgment. A registered Android receiver is not proof of scanner readiness.
+HID receives keyboard events; it does not identify a USB scanner or reliably
+distinguish human typing. Entering an editable field immediately clears a partial
+HID frame. iMin broadcasts are independent of text-field focus. Disabling editable
+pass-through does not guarantee suppression of text entry by other Flutter handlers.
 
-HID is keyboard input, not USB-device discovery: ordinary hardware typing can
-also form a frame. A visible/hidden TextField is not required to collect HID
-outside editable focus. While a field is focused, the default policy leaves its
-input alone. Setting passThroughEditableText false does not guarantee suppression
-of text entry: HardwareKeyboard handlers also run alongside other Flutter
-handlers. Applications needing capture while editing must design and verify
-their focus/input integration. Custom terminator lists are snapshotted by the
-HID collector when it is constructed.
+Auto mode selects one transport per start. It does not switch after a start error
+or infer hardware failure from a quiet period. Use an explicit mode when needed.
 
-Barcode text is trimmed and blanks are discarded, preserving the existing
-kiosk behavior. Android byte payloads are decoded as UTF-8. This is not a
-lossless arbitrary QR/binary-data API. Every new frame gets a new eventId, even
-when its barcode repeats. There is no time-based deduplication; replaying an
-existing event in application code should retain its ID. Device broadcasts do
-not include a reliable frame ID, so duplicate native broadcasts cannot be
-distinguished from deliberate repeated scans by this package alone.
+Configuring iMin changes device output settings, and stopping does not restore
+previous settings. A configuration response or registered receiver is not proof
+that a physical scanner is ready. Treat scanned/broadcast text as application input
+and apply your own business validation.
 
-## Optional processing (0.3.0)
+Text is trimmed; blanks are discarded. Byte payloads use UTF-8. This is a text
+input API, not lossless arbitrary QR/binary capture. Internal codes and leading
+zeros are accepted. Default repeated scans remain independent events.
 
-Defaults continue to accept internal codes and consecutive intentional scans.
-No format is inferred from text length and no GS1 prefix is removed.
+## Optional processing
 
 ```dart
 final scanner = Scanner(
   processing: ScanProcessingOptions(
-    normalize: (value) => value.toUpperCase(), // explicit application policy
-    accept: (value) => value.startsWith('ITEM-'),
-    // Only opt in where repeated scans do not represent additional items:
+    normalize: (text) => text.toUpperCase(),
+    accept: (text) => text.startsWith('ITEM-'),
     duplicateWindow: const Duration(milliseconds: 500),
   ),
 );
 ```
 
-Processing order is normalize, trim, reject empty, filter, suppress consecutive
-accepted repeats, deliver. Identity and UTC observation time are retained after
-normalization. With defaults the original event object is passed through.
-The duplicate window defaults to zero (disabled), uses a monotonic clock, and
-rejects only intervals strictly less than the window. Rejected repeats do not
-extend it; A/B/A are separate accepted frames. Stop/restart resets the window.
-Callback exceptions arrive on events as errors with their stack, without
-preventing subsequent frames from being processed. Negative windows are invalid.
+Order: normalize â†’ trim â†’ reject empty â†’ filter â†’ consecutive-repeat check â†’
+deliver. Normalization preserves the event ID and UTC timestamp. Defaults do not
+normalize/filter/suppress repeats and pass through the same event object.
 
-For a custom source use ProcessingScanner(source: source, options: options).
-The decorator owns the source, including disposal. Do not wrap an already
-configured Scanner with the same policy a second time. Direct HidScanner and
-IminBroadcastScanner are unprocessed unless explicitly wrapped.
+Repeat suppression is **disabled by default**. When enabled, only consecutive
+accepted equal values less than the window apart are suppressed. The exact time
+boundary is accepted; a suppressed read does not extend the window. A/B/A stays
+three accepted reads, and stop/restart resets the history. It uses monotonic time.
+Two intentional scans can mean two items, so choose this policy explicitly.
 
-## Diagnostics (0.3.0)
+Callback exceptions arrive as stream errors with their stack; later reads continue.
+No symbol format is guessed from text length, and no GS1 prefix is removed.
+`ProcessingScanner` can wrap a custom `BarcodeScanner` and owns its disposal.
 
-Built-in scanners implement the additive DiagnosticBarcodeScanner capability;
-third-party implementations of BarcodeScanner need not implement it.
+## Diagnostics
 
 ```dart
-final diagnosticSubscription = scanner.diagnostics.listen((notice) {
+final notices = scanner.diagnostics.listen((notice) {
   print('${notice.reason.name}, length=${notice.inputLength}');
 });
+// Cancel notices before disposing its scanner.
 ```
 
-Reasons: incompleteFrame (a nonempty frame expired), frameOverflow,
-blankFrame, filtered, normalizedEmpty, duplicateSuppressed. Diagnostic time is
-UTC; eventId is present when a complete frame already exists. No barcode text
-is included or automatically logged. Operational errors remain on events.
-Overflow reports once and discards through the terminator or idle timeout;
-empty terminators and intentional focus/stop/dispose resets are silent.
-Dispose closes both streams. Cancel/resume paused subscriptions before awaiting
-disposal because paused listeners can delay stream completion.
+Reasons: `incompleteFrame`, `frameOverflow`, `blankFrame`, `filtered`,
+`normalizedEmpty`, and `duplicateSuppressed`. Notices contain UTC time, input
+length, and an event ID when a frame already exists; they contain no barcode text.
+Operational failures remain errors on `events`. Overflow is diagnosed once per
+frame; intentional focus/stop/dispose resets do not produce timeout notices.
 
-## Optional screen lifecycle (0.3.0)
+## Example and troubleshooting
 
-```dart
-import 'package:barcode_port/scanner_widgets.dart';
-
-ScannerListener(
-  createScanner: () => Scanner(),
-  enabled: isScanTabVisible,
-  onScan: (scan) => handleBarcode(scan.barcode),
-  onDiagnostic: (notice) => handleDiscard(notice.reason),
-  onError: (error, stack) => handleInputError(error, stack),
-  child: scanScreen,
-);
-```
-
-The widget creates one scanner per State and owns its start/stop/dispose.
-Changing the factory or options during rebuild does not replace that source;
-use a new key when replacing it, and explicitly await old-source cleanup before
-starting a different owner. Simultaneous owners still fail instead of stealing
-input. For applications needing explicit asynchronous handoff use the headless
-API and await stop before starting the next owner.
-
-Reception requires enabled=true, the current route, and a resumed app.
-pauseWhenRouteCovered and pauseWhenAppInactive default true and can be opted out
-independently. A null initial lifecycle is treated as foreground; explicit
-inactive/hidden/paused/detached states pause reception. ModalRoute.isCurrentOf
-tracks covering pages/dialogs. Hidden tabs and nested navigators must explicitly
-provide visibility through enabled; the nearest route cannot determine that.
-
-Scan/diagnostic callbacks stop immediately when ineligible, even while an
-asynchronous stop is pending. Startup frames are retained for the eligible
-session. Failed transitions report through onError (or FlutterError if omitted)
-and are retried only after eligibility becomes false then true. Latest callback
-references are used without recreating the source.
-
-State.dispose is synchronous: it disables delivery and removes observers first,
-then schedules handled serialized cleanup after pending work. It cancels
-subscriptions, attempts stop, and always attempts dispose. Final cleanup failures
-are reported via FlutterError rather than calling an unmounted widget. Persistent
-native cleanup failures retain the existing ownership lease; retain a reference
-to your factory's source if explicit cleanup retries are required.
-
-HID continues to leave focused editable fields alone by default and clears
-partial frames as soon as an editable field gains focus. iMin broadcasts remain
-independent of editable focus. Lifecycle management does not add background
-scanning or change device-level output settings.
-
-## Application integration
-
-Keep application-specific ports/models in your domain when isolation matters.
-Implement a thin data-layer adapter that maps BarcodeScan to that model without
-changing eventId or occurredAt. Decide when to start and release the scanner in
-your application (route lifetime, background policy, permissions and UI).
-Product lookup, quantity changes, business validation and processed-event
-persistence belong in the consuming application.
-
-For custom composition/testing, BarcodeScanner, HidScanner,
-IminBroadcastScanner, ResolvingScanner and ScannerPlatform are public. The
-default BridgeScannerPlatform wraps the native bridge; custom platform
-implementations must define their own resource ownership. Ordinary consumers
-only need Scanner and ScannerOptions.
-
-## Compatibility
-
-- Dart ^3.10.7, Flutter >=3.38.6.
-- Native plugin: Android only, minSdk 24, compileSdk 36, Java/Kotlin target 17.
-- Android example uses AGP 8.11.1, Kotlin 2.2.20 and Gradle 8.14, matching this
-  integration's existing toolchain. Newer Flutter releases may warn about these
-  versions; do not treat this as a claim of AGP 9 compatibility.
-- HID is implemented in Flutter. The web example is useful for exercising
-  keyboard input, but it does not add native iMin support to web or certify all
-  desktop platforms/devices.
-- Camera, Bluetooth-specific protocols, USB serial, device discovery and
-  persistent background scanning are not implemented.
-
-The low-level API is available through
-`package:barcode_port/scanner_bridge.dart`. Default barcodes() calls
-share one EventChannel stream. A ScannerBridge that starts the native listener
-owns it until its stopListening succeeds; competing starts fail instead of
-overwriting the owner. Direct low-level callers must clean up after failed
-starts too. Generated Pigeon types are outside the high-level API.
-
-## Develop
-
-```powershell
+```sh
+cd example
 flutter pub get
-flutter test
-flutter analyze
-dart run pigeon --input pigeons/scanner_host.dart
+flutter run
 ```
 
-Regenerate Pigeon only when changing its source interface; do not edit generated
-files manually. From example/, use flutter run or flutter build apk --debug.
-Local mocked platform tests do not replace testing iMin broadcasts and actual
-HID hardware on the intended device.
+To explicitly configure iMin broadcast output (off by default):
+
+```sh
+flutter run --dart-define=BARCODE_PORT_CONFIGURE_IMIN_OUTPUT=true
+```
+
+For the optional processing demonstration:
+
+```sh
+flutter run --dart-define=SCANNER_EXAMPLE_POLICY=true
+```
+
+The example owns its scanner, including injected sources. Use a hot restart after
+changing compile-time flags. See the [example guide](https://github.com/bashar12-dev/barcode_port/blob/main/example/README.md).
+
+| Symptom | Check |
+|---|---|
+| HID read never completes | Scanner keyboard mode, Enter/Tab suffix, timeout, active screen, editable focus. |
+| Ordinary typing becomes a scan | HID receives keyboard input; choose screen eligibility and device configuration deliberately. |
+| Duplicate-owner error | Await the old owner's stop/dispose before starting a new owner. |
+| iMin sends no reads | Mode, actual broadcast configuration/action/payload, device firmware, and diagnostics/errors. |
+| Repeat policy removes intentional reads | Leave `duplicateWindow` at zero where repeated scans represent separate actions. |
+
+## Development and support
+
+[Contributing](https://github.com/bashar12-dev/barcode_port/blob/main/CONTRIBUTING.md) Â· [Support](https://github.com/bashar12-dev/barcode_port/blob/main/SUPPORT.md) Â·
+[Security](https://github.com/bashar12-dev/barcode_port/blob/main/SECURITY.md) Â· [Release checklist](https://github.com/bashar12-dev/barcode_port/blob/main/doc/releasing.md) Â·
+[Changelog](https://github.com/bashar12-dev/barcode_port/blob/main/CHANGELOG.md)
+
+Report a device issue with its model, Android/firmware version, connection mode,
+scanner output settings, and a minimal example using synthetic barcode text.
+Use GitHub's private vulnerability reporting for security reports; do not post
+credentials, customer barcodes, or payment data in public issues.
+
+The low-level native bridge is also available through
+`package:barcode_port/scanner_bridge.dart`. Advanced/custom sources implement
+`BarcodeScanner` and optionally `DiagnosticBarcodeScanner`. Generated Pigeon types
+are implementation details. The package uses Flutter and Dart's `meta` annotations;
+no manufacturer SDK is bundled. Distributed under the [MIT license](https://github.com/bashar12-dev/barcode_port/blob/main/LICENSE).

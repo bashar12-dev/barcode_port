@@ -1,0 +1,78 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_call:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Flutter ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: minimum
+            version: '3.38.6'
+          - name: stable
+            version: ''
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2
+        with:
+          channel: stable
+          flutter-version: ${{ matrix.version }}
+          cache: true
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - run: flutter pub get
+      - run: dart run tool/check_format.dart
+      - run: flutter analyze --no-pub
+      - run: flutter test --no-pub --coverage
+      - run: dart run tool/coverage_summary.dart
+      - run: flutter pub get
+        working-directory: example
+      - run: flutter test --no-pub
+        working-directory: example
+      - run: flutter build apk --debug --no-pub --target-platform android-arm64
+        working-directory: example
+      - run: dart run tool/smoke_consumer.dart
+      - run: flutter build web --no-pub
+        working-directory: example
+        if: matrix.name == 'stable'
+      - run: dart pub global activate dartdoc 9.0.11
+        if: matrix.name == 'stable'
+      - run: dart pub global run dartdoc --output .dart_tool/api
+        if: matrix.name == 'stable'
+      - run: flutter pub publish --dry-run
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: coverage-${{ matrix.name }}
+          path: |
+            coverage/handwritten.info
+            coverage/summary.txt
+          if-no-files-found: ignore
+  package-score:
+    needs: quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: dart pub global activate pana
+      - run: dart run tool/check_pana.dart

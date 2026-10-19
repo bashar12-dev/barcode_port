@@ -62,19 +62,27 @@ abstract class ManagedScanner implements DiagnosticBarcodeScanner {
     });
   }
 
+  /// Delivers [scan] unless this owner is disposed or its streams are closed.
   void emit(BarcodeScan scan) {
     if (!_disposed && !_closed) _events.add(scan);
   }
 
+  /// Delivers an operational [error] and its original [stack].
   void emitError(Object error, StackTrace stack) {
     if (!_disposed && !_closed) _events.addError(error, stack);
   }
 
+  /// Delivers a discarded-input notice without barcode contents.
   void emitDiagnostic(ScannerDiagnostic diagnostic) {
     if (!_disposed && !_closed) _diagnostics.add(diagnostic);
   }
 
+  /// Acquires reception resources for the serialized start operation.
   Future<void> onStart();
+
+  /// Releases reception resources, allowing retries when cleanup fails.
   Future<void> onStop();
+
+  /// Releases owned children even when the preceding stop attempt failed.
   Future<void> onDispose() async {}
 }

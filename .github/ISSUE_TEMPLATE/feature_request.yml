@@ -1,0 +1,17 @@
+name: Feature request
+description: Describe a concrete input or integration need.
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Use case and current limitation
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Desired behavior and alternatives
+  - type: textarea
+    id: devices
+    attributes:
+      label: Relevant devices and public protocol references

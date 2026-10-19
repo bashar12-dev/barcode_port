@@ -7,8 +7,16 @@ import 'scanner_options.dart';
 import 'scanner_platform.dart';
 import 'scanner_diagnostic.dart';
 
+/// Selects and owns one transport per start according to host metadata.
+///
+/// Auto mode falls back to HID if inspection fails; a selected transport
+/// failure is reported instead of triggering a silent transport switch.
 class ResolvingScanner extends ManagedScanner {
   static ResolvingScanner? _owner;
+
+  /// Creates an owner of both [broadcast] and [hid], disposing both on release.
+  ///
+  /// [platform] supplies host inspection and optional output configuration.
   ResolvingScanner({
     required BarcodeScanner broadcast,
     required BarcodeScanner hid,

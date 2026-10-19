@@ -6,9 +6,15 @@ import 'managed_scanner.dart';
 import 'scan_processing_options.dart';
 import 'scanner_diagnostic.dart';
 
-/// Owns [source] and applies optional policy once per observed frame.
+/// Owns a source and applies optional policy once per observed frame.
+///
 /// Consumers must not also manage the source's lifecycle directly.
 final class ProcessingScanner extends ManagedScanner {
+  /// Creates a decorator that owns [source], including final disposal.
+  ///
+  /// [elapsed] supplies monotonic time for deterministic tests; otherwise a
+  /// stopwatch measures intervals. Throws [ArgumentError] for a negative
+  /// duplicate window. Callback errors reach the events stream with a stack.
   ProcessingScanner({
     required BarcodeScanner source,
     ScanProcessingOptions options = const ScanProcessingOptions(),

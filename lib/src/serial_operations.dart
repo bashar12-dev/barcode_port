@@ -4,6 +4,7 @@ import 'dart:async';
 final class SerialOperations {
   Future<void> _tail = Future<void>.value();
 
+  /// Runs [operation] after the previous operation and propagates its failure.
   Future<void> run(Future<void> Function() operation) async {
     final previous = _tail;
     final completed = Completer<void>();

@@ -8,6 +8,10 @@ import 'scan_processing_options.dart';
 
 /// Convenient owner of a single active scanner transport.
 final class Scanner extends ResolvingScanner {
+  /// Creates an owner with optional platform injection and text processing.
+  ///
+  /// [options] selects transport and input policy. [processing] is disabled by
+  /// default. Configuring device output requires an explicit opt-in in options.
   factory Scanner({
     ScannerOptions options = const ScannerOptions(),
     ScannerPlatform? platform,

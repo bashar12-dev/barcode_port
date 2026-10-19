@@ -5,7 +5,12 @@ import 'managed_scanner.dart';
 import 'scanner_platform.dart';
 import 'scanner_diagnostic.dart';
 
+/// Receives decoded Android iMin broadcasts through a platform boundary.
 final class IminBroadcastScanner extends ManagedScanner {
+  /// Creates a source using [platform] for native reception.
+  ///
+  /// Optional [clock] and [eventIdFactory] make observations deterministic in
+  /// tests. This source is independent of editable focus.
   IminBroadcastScanner({
     required ScannerPlatform platform,
     DateTime Function()? clock,

@@ -16,19 +16,19 @@ void main() {
     messenger.setMockDecodedMessageHandler<Object?>(inspect, null);
   });
 
-  test('Pigeon inspect preserves flags without inventing a live listener', () async {
-    messenger.setMockDecodedMessageHandler<Object?>(inspect, (_) async {
-      return [
-        ScannerHostInspection(
-          listening: false,
-          preferNativeBroadcast: true,
-        ),
-      ];
-    });
-    final result = await ScannerBridge().inspectHost();
-    expect(result.listening, isFalse);
-    expect(result.preferNativeBroadcast, isTrue);
-  });
+  test(
+    'Pigeon inspect preserves flags without inventing a live listener',
+    () async {
+      messenger.setMockDecodedMessageHandler<Object?>(inspect, (_) async {
+        return [
+          ScannerHostInspection(listening: false, preferNativeBroadcast: true),
+        ];
+      });
+      final result = await ScannerBridge().inspectHost();
+      expect(result.listening, isFalse);
+      expect(result.preferNativeBroadcast, isTrue);
+    },
+  );
 
   test('missing host fails instead of fabricating inspection', () async {
     await expectLater(
@@ -55,13 +55,21 @@ void main() {
     expect(values, ['12345', '67890']);
   });
 
-  test('preferBroadcastOutput uses the host bool and does not default true', () async {
-    const channel = BasicMessageChannel<Object?>(
-      'dev.flutter.pigeon.scanner_bridge.ScannerHostApi.preferBroadcastOutput',
-      ScannerHostApi.pigeonChannelCodec,
-    );
-    messenger.setMockDecodedMessageHandler<Object?>(channel, (_) async => [true]);
-    addTearDown(() => messenger.setMockDecodedMessageHandler<Object?>(channel, null));
-    expect(await ScannerBridge().preferBroadcastOutput(), isTrue);
-  });
+  test(
+    'preferBroadcastOutput uses the host bool and does not default true',
+    () async {
+      const channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.scanner_bridge.ScannerHostApi.preferBroadcastOutput',
+        ScannerHostApi.pigeonChannelCodec,
+      );
+      messenger.setMockDecodedMessageHandler<Object?>(
+        channel,
+        (_) async => [true],
+      );
+      addTearDown(
+        () => messenger.setMockDecodedMessageHandler<Object?>(channel, null),
+      );
+      expect(await ScannerBridge().preferBroadcastOutput(), isTrue);
+    },
+  );
 }

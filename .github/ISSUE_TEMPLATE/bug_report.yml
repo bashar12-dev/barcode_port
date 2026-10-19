@@ -1,0 +1,29 @@
+name: Bug report
+description: Report a reproducible input, lifecycle, or device issue.
+body:
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and actual behavior
+      description: Use synthetic barcode values only. Never post secrets or customer data.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction and steps
+      description: Include route, editable focus, app state, mode, and relevant options.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Versions and device configuration
+      description: BarcodePort/Flutter versions, device model, Android/firmware, connection, suffix/broadcast settings. Do not include serial numbers.
+    validations:
+      required: true
+  - type: textarea
+    id: errors
+    attributes:
+      label: Errors and diagnostic reasons
+      description: Remove private input from logs before sharing.

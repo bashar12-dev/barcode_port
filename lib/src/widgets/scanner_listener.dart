@@ -7,13 +7,20 @@ import '../scanning/barcode_scanner.dart';
 import '../scanning/scanner_diagnostic.dart';
 import '../serial_operations.dart';
 
-/// Owns one scanner for this State. The factory is called exactly once;
+/// Owns one scanner for a widget lifetime and follows reception eligibility.
+///
+/// The factory is called exactly once;
 /// use a new key to replace the scanner/configuration. Do not manage the same
 /// source's lifecycle elsewhere while this widget is mounted.
 ///
 /// Hidden tabs and nested navigators must supply their visibility via [enabled].
 /// This widget does not arbitrate handoff between competing scanner owners.
 class ScannerListener extends StatefulWidget {
+  /// Creates a screen owner with route and application pausing enabled.
+  ///
+  /// The source returned by [createScanner] belongs to this widget, including
+  /// disposal. [onError] handles operational errors; omitted handlers report
+  /// through FlutterError. Final cleanup failures always use FlutterError.
   const ScannerListener({
     super.key,
     required this.createScanner,
@@ -26,13 +33,28 @@ class ScannerListener extends StatefulWidget {
     this.pauseWhenAppInactive = true,
   });
 
+  /// The source factory, called once per State and not on ordinary rebuilds.
   final BarcodeScanner Function() createScanner;
+
+  /// The screen subtree whose lifetime contains the reception owner.
   final Widget child;
+
+  /// The callback for observations while reception is eligible.
   final ValueChanged<BarcodeScan> onScan;
+
+  /// The optional callback for discarded-input diagnostics.
   final ValueChanged<ScannerDiagnostic>? onDiagnostic;
+
+  /// The optional operational error callback with the original stack.
   final void Function(Object error, StackTrace stack)? onError;
+
+  /// Whether reception is manually enabled, including hidden-tab visibility.
   final bool enabled;
+
+  /// Whether a covering page or dialog pauses reception.
   final bool pauseWhenRouteCovered;
+
+  /// Whether an explicitly non-resumed application state pauses reception.
   final bool pauseWhenAppInactive;
 
   @override

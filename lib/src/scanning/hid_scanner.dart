@@ -7,9 +7,15 @@ import 'barcode_scan.dart';
 import 'scanner_options.dart';
 import 'scanner_diagnostic.dart';
 
-/// Keyboard-wedge input. Ordinary hardware typing cannot be reliably identified
-/// as a scanner; the owner decides when this input is active.
+/// Receives keyboard-wedge input while its owner enables reception.
+///
+/// Ordinary hardware typing cannot be reliably identified as a scanner.
 final class HidScanner implements DiagnosticBarcodeScanner {
+  /// Creates a collector with snapshotted terminators and optional test clocks.
+  ///
+  /// [frameTimeout] overrides [options]. [clock] supplies observation time and
+  /// [eventIdFactory] supplies independent identities. Throws [ArgumentError]
+  /// for a nonpositive timeout/length or an empty terminator list.
   HidScanner({
     ScannerOptions options = const ScannerOptions(),
     Duration? frameTimeout,

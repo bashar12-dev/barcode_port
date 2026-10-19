@@ -1,13 +1,28 @@
 name: barcode_port
-description: Reusable Flutter barcode input with HID and Android iMin broadcasts.
-version: 0.3.0
-publish_to: none
+description: >-
+  Hardware barcode input for Flutter on Android, with keyboard-wedge HID,
+  iMin broadcasts, screen lifecycle management, and optional scan processing.
+version: 1.0.0
+homepage: https://github.com/bashar12-dev/barcode_port
+repository: https://github.com/bashar12-dev/barcode_port
+issue_tracker: https://github.com/bashar12-dev/barcode_port/issues
+documentation: https://github.com/bashar12-dev/barcode_port#readme
+topics:
+  - barcode
+  - scanner
+  - hid
+  - imin
+  - flutter
+screenshots:
+  - description: BarcodePort example displaying a scan with default processing.
+    path: doc/images/example.png
 environment:
   sdk: ^3.10.7
   flutter: '>=3.38.6'
 dependencies:
   flutter:
     sdk: flutter
+  meta: ^1.17.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -1,0 +1,8 @@
+dartdoc:
+  nodoc:
+    - lib/src/generated/**
+  errors:
+    - broken-link
+    - unresolved-doc-reference
+  warnings:
+    - missing-from-search-index

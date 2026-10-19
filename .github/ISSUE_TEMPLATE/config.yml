@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/bashar12-dev/barcode_port/security/advisories/new
+    about: Report security vulnerabilities privately.

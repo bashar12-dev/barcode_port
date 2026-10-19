@@ -1,0 +1,34 @@
+# Dart and Flutter tooling.
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub/
+.pub-cache/
+build/
+**/build/
+coverage/
+doc/api/
+**/pubspec.lock
+
+# Local tools, editors, and operating systems.
+.superpowers/
+.idea/
+.vscode/
+*.iml
+*.log
+.DS_Store
+Thumbs.db
+
+# Device paths, signing material, and build products.
+**/.gradle/
+**/local.properties
+**/key.properties
+*.jks
+*.keystore
+*.pem
+*.p12
+*.apk
+*.aab
+.env
+.env.*

@@ -1,9 +1,20 @@
 import 'package:flutter/services.dart';
 
-enum ScannerMode { auto, hid, iminBroadcast }
+/// The input transport selected for a reception session.
+enum ScannerMode {
+  /// Inspects host metadata and falls back to HID if inspection fails.
+  auto,
 
-/// Input policy. Configuring iMin changes its device-level output settings.
+  /// Receives keyboard-wedge input without native host inspection.
+  hid,
+
+  /// Receives Android iMin broadcasts without automatic HID fallback.
+  iminBroadcast,
+}
+
+/// Transport and keyboard framing policy for one scanner owner.
 final class ScannerOptions {
+  /// Creates a policy with no device output configuration by default.
   const ScannerOptions({
     this.mode = ScannerMode.auto,
     this.configureIminOutput = false,
@@ -13,13 +24,25 @@ final class ScannerOptions {
     this.passThroughEditableText = true,
   });
 
+  /// The transport selection policy applied at each start.
   final ScannerMode mode;
+
+  /// Whether starting iMin input requests device-level broadcast output settings.
+  ///
+  /// Disabled by default. Stopping does not restore previous device settings.
   final bool configureIminOutput;
+
+  /// The maximum inter-character gap before an incomplete HID frame is discarded.
   final Duration frameTimeout;
+
+  /// The keyboard keys that complete a HID frame, snapshotted at construction.
   final List<LogicalKeyboardKey> terminators;
+
+  /// The maximum number of UTF-16 code units in a HID frame.
   final int maxFrameLength;
 
-  /// Does not collect keys while an EditableText has focus.
-  /// Setting false does not guarantee suppression of text entry elsewhere.
+  /// Whether HID leaves input to the currently focused editable field.
+  ///
+  /// Disabling this does not guarantee suppression of text entry elsewhere.
   final bool passThroughEditableText;
 }
