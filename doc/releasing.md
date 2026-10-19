@@ -69,6 +69,12 @@ The automated physical gate remains strict and no test results are fabricated.
 - [ ] In a new consumer use hosted `barcode_port: ^1.0.0` without overrides and verify Android registration/build.
 - [ ] Publish GitHub release notes only after the package upload is confirmed.
 
+After pub.dev confirms the upload, run the **Verify hosted package** workflow
+against the release tag. It creates a fresh Flutter Android application with a
+hosted dependency, without a local package path or dependency overrides, and
+builds it. The equivalent local command is
+`dart run tool/smoke_consumer.dart --hosted`.
+
 Never work around failed checks with `--skip-validation`. Resolve a published
 problem using a new patch version; do not re-use a published version number.
 
