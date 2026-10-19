@@ -1,0 +1,21 @@
+name: barcode_port
+description: Reusable Flutter barcode input with HID and Android iMin broadcasts.
+version: 0.3.0
+publish_to: none
+environment:
+  sdk: ^3.10.7
+  flutter: '>=3.38.6'
+dependencies:
+  flutter:
+    sdk: flutter
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: 6.0.0
+  pigeon: 26.3.2
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.ultimate.pos.scanner_bridge
+        pluginClass: ScannerBridgePlugin
