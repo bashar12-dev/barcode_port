@@ -32,10 +32,12 @@ Generated Pigeon files are checked in. Regenerate them only when changing the
 platform interface, with the pinned Pigeon version:
 
 ```sh
-dart run pigeon --input pigeons/scanner_host.dart
+dart run tool/generate_bindings.dart
 ```
 
-Do not edit generated files by hand. Keep Dart and Kotlin channels consistent.
+The generation command runs the pinned Pigeon generator for both languages and
+then formats Dart using the package language version. Do not edit generated
+files by hand. Keep Dart and Kotlin channels consistent.
 Do not add manufacturer SDKs, permissions, or device settings changes implicitly.
 
 ## Changes and tests

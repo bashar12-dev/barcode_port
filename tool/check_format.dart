@@ -16,9 +16,7 @@ Future<void> main() async {
       path,
     ).listSync(recursive: true, followLinks: false)) {
       final name = file.path.replaceAll('\\', '/');
-      if (file is File &&
-          name.endsWith('.dart') &&
-          !name.contains('/generated/')) {
+      if (file is File && name.endsWith('.dart')) {
         files.add(file.path);
       }
     }
