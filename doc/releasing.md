@@ -2,6 +2,8 @@
 
 Release owner: Bashar Alhammadi (`bashar12-dev`). First public version: **1.0.0**.
 The approved documentation patch is **1.0.1**.
+The cross-platform release is **1.1.0**; its manual publication authorization
+and verification limits are recorded below.
 The standalone repository is the source of releases. Review the exact candidate
 commit and archive before uploading; package versions cannot be overwritten.
 
@@ -11,7 +13,9 @@ commit and archive before uploading; package versions cannot be overwritten.
 - [ ] Handwritten code formatting, analysis, package/example tests, and Dartdoc pass.
 - [ ] Handwritten-code coverage is recorded with generated code excluded.
 - [ ] Example and fresh external consumer build on Android on both SDK endpoints.
-- [ ] Web demonstration builds; this does not qualify an additional platform.
+- [ ] Web example builds; a build alone does not qualify a physical reader.
+- [ ] For 1.1.0+, fresh consumers build on all six declared targets on minimum/stable SDKs; Chrome routing tests pass, including web-on-Android.
+- [ ] Review `platform-validation.md`; distinguish successful builds/synthetic events from actual reader qualification on each target.
 - [ ] Pana runs on a temporary copy; investigate its report and fix actionable issues.
 - [ ] `flutter pub publish --dry-run` passes from a clean candidate; inspect every archive path.
 - [ ] Archive includes LICENSE, public docs, example, native and generated source; no secrets or parent application files.
@@ -42,12 +46,29 @@ the described interactions actually took place. A build, synthetic key injection
 or an unspecified successful-use report is not a replacement for these runs.
 
 ```sh
-dart run tool/verify_release.dart --version 1.0.1
+dart run tool/verify_release.dart --version 1.1.0
 ```
 
-Automated releases require this command to pass. Releases after 1.0.1 require
-completed physical qualification before tagging or publishing. Update the
+Automated releases require this command to pass. Manual releases also require
+completed physical qualification unless the maintainer authorizes a specific
+release with the missing evidence disclosed, as recorded for 1.1.0 below. Update the
 compatibility table with actual qualified models only after these runs pass.
+
+### Manual release authorization: 1.1.0
+
+On 2026-10-20, after delivery of the cross-platform implementation and its
+validation report, the maintainer instructed publication of the current library.
+That delivery disclosed that 1.1.0 was unpublished and physical-reader
+qualification on the additional platforms was pending. This instruction
+authorizes manual publication of 1.1.0 with those limits retained in the public
+documentation; it does not attest to any unperformed physical test.
+
+The minimum/stable build matrix, Chrome routing, package/example tests, API
+documentation, publish dry-run, and Pana passed. No hardware records are added
+by inference. `hardware-validation.json` remains empty, the physical validator
+continues to reject missing records, and `PUB_PUBLISH_ENABLED` stays false.
+This manual authorization applies only to 1.1.0; future releases retain the
+qualification requirement unless separately authorized by the maintainer.
 
 ### First manual release decision: 1.0.0
 

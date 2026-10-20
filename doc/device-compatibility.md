@@ -2,11 +2,12 @@
 
 ## Implementation and verified hardware
 
-Android HID keyboard-wedge input and iMin broadcast input are implemented.
+Flutter HID keyboard-wedge input is implemented on Android, iOS, Windows, macOS,
+Linux, and web. Android iMin broadcast input retains its existing implementation.
 A model is listed as verified only when an actual device qualification record
 covers both the input behavior and lifecycle checks in the release checklist.
 
-| Model | Android | Firmware | Connection | Output settings | Date | Result |
+| Model | OS / browser | Firmware | Connection | Output settings | Date | Result |
 |---|---|---|---|---|---|---|
 | Not yet documented | Not recorded | Not recorded | Not recorded | Not recorded | Not recorded | Pending qualification record |
 
@@ -14,8 +15,9 @@ The maintainer reported successful use, but the device model, Android version,
 and transport were not available. This is a user report, not a documented test
 of either transport or a certification for a named device.
 
-The web example verifies keyboard-event handling only. Unit/widget tests and
-Android builds do not establish physical HID or iMin compatibility. Do not infer
+See [platform validation](platform-validation.md) for automated and runtime
+evidence. Browser tests verify keyboard-event handling only. Unit/widget tests
+and platform builds do not establish physical HID or iMin compatibility. Do not infer
 support for camera decoding, serial, BLE/SPP, discovery, or background scanning.
 
 ## Recording a run
@@ -25,12 +27,18 @@ by inference. Retain an accompanying Markdown report in `doc/hardware/` containi
 setup, sequence, synthetic test values or their specification, observed counts,
 failures, and the tested commit. Do not include device serial numbers or customer
 data. Both `hid` and `iminBroadcast` records are required for automated releases
-and releases after 1.0.1. The maintainer approved the first manual 1.0.0 release
+and subsequent releases, subject to the specific manual authorization for 1.1.0
+documented in [the release checklist](releasing.md#manual-release-authorization-110).
+The maintainer approved the first manual 1.0.0 release
 based on the successful-use report with these verification limits disclosed;
 see [the first-release decision](releasing.md#first-manual-release-decision-100).
 This decision does not qualify either transport or any device model.
 The documentation-only 1.0.1 patch uses the identical scanner implementation
 and the same disclosed verification limits, with explicit maintainer approval.
+The maintainer instructed manual publication of the cross-platform 1.1.0 release
+after receiving its validation report. That report distinguishes successful
+automated builds and synthetic events from pending physical qualification.
+No additional reader model or transport is qualified by this publication.
 
 Each run needs the model, Android/firmware versions, connection, output settings,
 operator, UTC date, tested commit, 100 expected and 100 received frames with exact

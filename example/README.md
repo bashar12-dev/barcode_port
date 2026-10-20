@@ -1,8 +1,9 @@
 # BarcodePort example
 
-An independent Android application for exercising BarcodePort. The web host is a
-keyboard-input demonstration, not a native iMin implementation or additional
-platform qualification.
+An independent Flutter application for exercising BarcodePort. Keyboard input
+uses the same Dart/Flutter code on every supported platform; native iMin input
+is available only on Android. Builds and synthetic events are separate from
+physical-reader qualification.
 
 ```sh
 flutter pub get
@@ -10,6 +11,26 @@ flutter test
 flutter run
 flutter build apk --debug
 ```
+
+The checked-in hosts are Android and web (`flutter run -d chrome`). To run the
+same example on another target, generate its standard Flutter application host
+on the appropriate development machine, then run it:
+
+```sh
+flutter create --platforms=windows .
+flutter run -d windows
+```
+
+Replace `windows` with `linux` or `macos` as appropriate. On macOS use
+`flutter create --platforms=ios .` and select an iOS device or simulator with
+`flutter run -d <device-id>`. These generated application runners contain no
+BarcodePort scanner integration. Keep native Android/web files when generating
+other hosts. A reader must present keyboard input to the OS and the app must
+have foreground focus. Browser input requires focus in the Flutter view.
+
+CI generates fresh consumers for every target, independent of these hosts:
+`dart run tool/smoke_consumer.dart --platform=windows` from the package root.
+See [platform validation](../doc/platform-validation.md) for evidence and limits.
 
 The example starts with default processing and does not change iMin output
 settings. To explicitly request broadcast output configuration:
