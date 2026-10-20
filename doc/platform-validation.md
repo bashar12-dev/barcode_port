@@ -21,11 +21,36 @@ implementations remain authoritative. Web is detected before the target OS.
 | Existing package baseline | 66 tests passed before implementation |
 | Native target routing/keyboard/widget matrix | 18 tests passed locally, including Android bridge regression |
 | Package and consumer option tests | 87 tests passed locally |
-| Browser routing, including Android target | Pending execution |
-| Minimum/stable Android and web builds | Pending CI |
-| Minimum/stable Windows/Linux/macOS/iOS consumer builds | Pending CI |
-| Local example and hot restart | Pending execution |
+| Browser routing, including Android target | Passed in Chrome on minimum/stable CI |
+| Minimum/stable Android and web builds | Example and fresh consumers passed |
+| Minimum/stable Windows/Linux/macOS/iOS consumer builds | All eight jobs passed; iOS uses an unsigned simulator build |
+| Analysis, formatting, API documentation | Passed; Dartdoc has zero warnings/errors |
+| Package publish dry-run | Passed with zero warnings |
+| Pana package assessment | 160/160; reports support for all six platforms |
+| Local example | Received `00123` twice with no focused text field |
+| Local hot restart | Completed through Dart tooling; see SDK diagnostic below |
 | Physical reader qualification for new platforms | Not performed |
+
+Build and browser evidence: [CI run 39406435327](https://github.com/bashar12-dev/barcode_port/actions/runs/39406435327)
+at source commit `3d6660d89ce7e5da6a7b80d5fcad57a575cad42a`, on Flutter
+3.38.6 and stable 3.47.7. All eleven jobs passed, including Pana at 160/160.
+Coverage of handwritten
+library code was 387/402 lines (96.3%). An independent source review found no
+actionable findings. Subsequent documentation updates do not change runtime code.
+
+### Local development diagnostic
+
+On the local Flutter 3.47.2 SDK, Chrome hot restart completed but emitted a
+transient engine assertion, `Trying to render a disposed EngineFlutterView`.
+The same assertion was reproduced by hot restarting a minimal Flutter app with
+no BarcodePort dependency. The package example rendered its scanner UI after
+restart and a subsequent runtime-error query was empty. This result is recorded
+as a development-tool diagnostic, not a clean cross-device restart qualification.
+
+The local Chrome `flutter test` harness also stalled while loading both the new
+matrix and unchanged HID tests. Those tests passed in Chrome on both CI SDKs;
+local browser interaction separately verified the visible example. No SDK files
+or package behavior were modified to hide either diagnostic.
 
 Target overrides and injected keys exercise shared code; they do not boot the
 target operating systems or prove physical scanner compatibility. CI builds

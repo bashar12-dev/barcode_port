@@ -7,7 +7,7 @@ Linux, and web. Android iMin broadcast input retains its existing implementation
 A model is listed as verified only when an actual device qualification record
 covers both the input behavior and lifecycle checks in the release checklist.
 
-| Model | Android | Firmware | Connection | Output settings | Date | Result |
+| Model | OS / browser | Firmware | Connection | Output settings | Date | Result |
 |---|---|---|---|---|---|---|
 | Not yet documented | Not recorded | Not recorded | Not recorded | Not recorded | Not recorded | Pending qualification record |
 

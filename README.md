@@ -56,7 +56,9 @@ Native iMin support is not available on web, iOS, or desktop.
 flutter pub add barcode_port
 ```
 
-Or add:
+The commands above install the published release. This branch prepares 1.1.0;
+use a local path or this Git branch to try the unpublished candidate. After its
+publication, add:
 
 ```yaml
 dependencies:
@@ -250,7 +252,7 @@ changing compile-time flags. See the [example guide](https://github.com/bashar12
 [Security](https://github.com/bashar12-dev/barcode_port/blob/main/SECURITY.md) · [Release checklist](https://github.com/bashar12-dev/barcode_port/blob/main/doc/releasing.md) ·
 [Changelog](https://github.com/bashar12-dev/barcode_port/blob/main/CHANGELOG.md)
 
-Report a device issue with its model, Android/firmware version, connection mode,
+Report a device issue with its model, OS/browser and firmware versions, connection mode,
 scanner output settings, and a minimal example using synthetic barcode text.
 Use GitHub's private vulnerability reporting for security reports; do not post
 credentials, customer barcodes, or payment data in public issues.

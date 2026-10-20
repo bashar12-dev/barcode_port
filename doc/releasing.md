@@ -2,6 +2,7 @@
 
 Release owner: Bashar Alhammadi (`bashar12-dev`). First public version: **1.0.0**.
 The approved documentation patch is **1.0.1**.
+The current unpublished cross-platform candidate is **1.1.0**.
 The standalone repository is the source of releases. Review the exact candidate
 commit and archive before uploading; package versions cannot be overwritten.
 
@@ -11,7 +12,7 @@ commit and archive before uploading; package versions cannot be overwritten.
 - [ ] Handwritten code formatting, analysis, package/example tests, and Dartdoc pass.
 - [ ] Handwritten-code coverage is recorded with generated code excluded.
 - [ ] Example and fresh external consumer build on Android on both SDK endpoints.
-- [ ] Web demonstration builds; this does not qualify an additional platform.
+- [ ] Web example builds; a build alone does not qualify a physical reader.
 - [ ] For 1.1.0+, fresh consumers build on all six declared targets on minimum/stable SDKs; Chrome routing tests pass, including web-on-Android.
 - [ ] Review `platform-validation.md`; distinguish successful builds/synthetic events from actual reader qualification on each target.
 - [ ] Pana runs on a temporary copy; investigate its report and fix actionable issues.
@@ -44,7 +45,7 @@ the described interactions actually took place. A build, synthetic key injection
 or an unspecified successful-use report is not a replacement for these runs.
 
 ```sh
-dart run tool/verify_release.dart --version 1.0.1
+dart run tool/verify_release.dart --version 1.1.0
 ```
 
 Automated releases require this command to pass. Releases after 1.0.1 require

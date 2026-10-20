@@ -1,6 +1,6 @@
 # Shared Flutter Platform Support Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Support keyboard-wedge input on all six Flutter platforms without new native scanner code, retaining Android behavior.
 
@@ -34,11 +34,11 @@
 
 **Interfaces:** Consumes existing `ScannerPlatform`; produces internal `ScannerPlatform createDefaultScannerPlatform()` using `kIsWeb` before `defaultTargetPlatform`. No new exported API.
 
-- [ ] Write tests capturing Android method/event channel calls on default non-Android auto and explicit iMin starts; assert zero calls, UnsupportedError for iMin, cleanup and subsequent HID success.
-- [ ] Run `flutter test test/scanning/platform_support_test.dart`; expect RED because default uses bridge everywhere.
-- [ ] Implement internal keyboard-only boundary: empty stream, false preference, unsupported start/configure, harmless stop. Keep injected platform precedence.
-- [ ] Test default HID frames, leading zeros, Enter/Tab, repeated identity, focus resets, stop/restart and actual ScannerListener enable/lifecycle over TargetPlatform values; verify injected broadcast behavior separately. Browser run checks kIsWeb even with Android target override.
-- [ ] Run package tests and actual Chrome tests; expect all pass. Commit runtime and regression tests.
+- [x] Write tests capturing Android method/event channel calls on default non-Android auto and explicit iMin starts; assert zero calls, UnsupportedError for iMin, cleanup and subsequent HID success.
+- [x] Run `flutter test test/scanning/platform_support_test.dart`; expect RED because default uses bridge everywhere.
+- [x] Implement internal keyboard-only boundary: empty stream, false preference, unsupported start/configure, harmless stop. Keep injected platform precedence.
+- [x] Test default HID frames, leading zeros, Enter/Tab, repeated identity, focus resets, stop/restart and actual ScannerListener enable/lifecycle over TargetPlatform values; verify injected broadcast behavior separately. Browser run checks kIsWeb even with Android target override.
+- [x] Run package tests and actual Chrome tests; expect all pass. Commit runtime and regression tests.
 
 ### Task 2: Portable consumer validation and CI
 
@@ -46,10 +46,10 @@
 
 **Interfaces:** Extend existing script compatibly with `--platform=android|web|windows|linux|macos|ios`; preserve `--hosted` and Android default. Build fresh app using the package path unless hosted explicitly selected.
 
-- [ ] Add invalid-platform validation test before mutation; watch it fail, then implement argument handling. Preserve unique temporary-directory containment safeguards.
-- [ ] Generate only the selected standard Flutter runner in a fresh consumer; Android API 24 adjustment only for Android. Build debug desktop, Android arm64, web release, or unsigned iOS simulator as appropriate.
-- [ ] Add stable/minimum Windows/Linux/macOS/iOS fresh builds, reusing existing Android quality jobs and adding minimum web build plus Chrome event tests. Do not add native scanner implementations or unused committed runners.
-- [ ] Run local tool tests and web consumer build. Run hosted CI from feature branch for targets unavailable locally; retain outcomes/log links. Commit tooling/CI.
+- [x] Add invalid-platform validation test before mutation; watch it fail, then implement argument handling. Preserve unique temporary-directory containment safeguards.
+- [x] Generate only the selected standard Flutter runner in a fresh consumer; Android API 24 adjustment only for Android. Build debug desktop, Android arm64, web release, or unsigned iOS simulator as appropriate.
+- [x] Add stable/minimum Windows/Linux/macOS/iOS fresh builds, reusing existing Android quality jobs and adding minimum web build plus Chrome event tests. Do not add native scanner implementations or unused committed runners.
+- [x] Run local tool tests and web consumer build. Run hosted CI from feature branch for targets unavailable locally; retain outcomes/log links. Commit tooling/CI.
 
 ### Task 3: Distribution, documentation, validation, and synchronization
 
@@ -57,12 +57,16 @@
 
 **Interfaces:** Top-level `platforms` reports all six targets; Android plugin registration unchanged. Candidate version 1.1.0. Document consumer script and standard example runner generation commands.
 
-- [ ] Update support matrix, installation version, native errors, foreground/browser focus, keyboard layout, and separate physical vs synthetic evidence in both languages.
-- [ ] Run format, analysis, full tests/coverage, example tests, Dartdoc, package dry-run and Pana. Inspect archive and diff to ensure Android/native files unchanged.
-- [ ] Launch the example on an available target and perform hot restart. Record actual results, CI links, and pending hardware qualification without certification claims.
-- [ ] Commit candidate. Request fresh whole-branch review with spec/plan and ledger rulings; fix material findings with targeted RED/GREEN regression and suite run.
-- [ ] Synchronize validated package to existing local mirrors only after verifying their baseline; preserve unrelated application/index changes and adjust only barcode_port root-lock version. Finish with exact state and remaining release gates.
+- [x] Update support matrix, installation version, native errors, foreground/browser focus, keyboard layout, and separate physical vs synthetic evidence in both languages.
+- [x] Run format, analysis, full tests/coverage, example tests, Dartdoc, package dry-run and Pana. Inspect archive and diff to ensure Android/native files unchanged.
+- [x] Launch the example on an available target and perform hot restart. Record actual results, CI links, and pending hardware qualification without certification claims.
+- [x] Commit candidate. Request fresh whole-branch review with spec/plan and ledger rulings; fix material findings with targeted RED/GREEN regression and suite run.
+- [x] Synchronize validated package to existing local mirrors only after verifying their baseline; preserve unrelated application/index changes and adjust only barcode_port root-lock version. Finish with exact state and remaining release gates.
 
 ## Execution decisions
 
 The maintainer approved the full design and instructed execution. Use native inline execution in this session, with one economical fresh reviewer at the end. The dedicated independent repository and its feature branch isolate this work from the dirty application checkout; no additional checkout is needed.
+
+## Completion evidence
+
+CI run 39406435327 passed all eleven jobs at 3d6660d: six-target consumers on minimum/stable, Chrome routing, package/example tests, Dartdoc, dry-run, and Pana 160/160. Local adapter and invoice identity tests also passed. Android native/generated sources are unchanged. Physical qualification and publication remain outside this completed implementation.

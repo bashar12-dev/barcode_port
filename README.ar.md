@@ -143,7 +143,7 @@ flutter run --dart-define=BARCODE_PORT_CONFIGURE_IMIN_OUTPUT=true
 
 راجع [المثال](https://github.com/bashar12-dev/barcode_port/blob/main/example/README.md) و[الدعم](https://github.com/bashar12-dev/barcode_port/blob/main/SUPPORT.md) و[المساهمة](https://github.com/bashar12-dev/barcode_port/blob/main/CONTRIBUTING.md)
 و[قائمة الإصدار](https://github.com/bashar12-dev/barcode_port/blob/main/doc/releasing.md). عند الإبلاغ عن مشكلة أرفق الموديل وإصدار
-Android والبرنامج الثابت وطريقة الاتصال وإعداد الإخراج ومثالًا صغيرًا ببيانات
+نظام التشغيل أو المتصفح والبرنامج الثابت وطريقة الاتصال وإعداد الإخراج ومثالًا صغيرًا ببيانات
 تجريبية. تُرسل الثغرات عبر الإبلاغ الأمني الخاص في GitHub وفق [سياسة الأمن](https://github.com/bashar12-dev/barcode_port/blob/main/SECURITY.md).
 
 المكتبة بترخيص [MIT](https://github.com/bashar12-dev/barcode_port/blob/main/LICENSE). لا تتضمن SDK مملوكًا لشركة أجهزة.
