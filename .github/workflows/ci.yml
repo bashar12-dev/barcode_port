@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, 'codex/**']
   pull_request:
   workflow_call:
 
@@ -48,9 +48,10 @@ jobs:
       - run: flutter build apk --debug --no-pub --target-platform android-arm64
         working-directory: example
       - run: dart run tool/smoke_consumer.dart
+      - run: flutter test --no-pub --platform chrome test/scanning/platform_support_test.dart
       - run: flutter build web --no-pub
         working-directory: example
-        if: matrix.name == 'stable'
+      - run: dart run tool/smoke_consumer.dart --platform=web
       - run: dart pub global activate dartdoc 9.0.11
         if: matrix.name == 'stable'
       - run: dart pub global run dartdoc --output .dart_tool/api
@@ -64,8 +65,45 @@ jobs:
             coverage/handwritten.info
             coverage/summary.txt
           if-no-files-found: ignore
+  platform-builds:
+    name: ${{ matrix.target }} / Flutter ${{ matrix.sdk }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        sdk: [minimum, stable]
+        target: [windows, linux, macos, ios]
+        include:
+          - sdk: minimum
+            version: '3.38.6'
+          - sdk: stable
+            version: ''
+          - target: windows
+            os: windows-latest
+          - target: linux
+            os: ubuntu-latest
+          - target: macos
+            os: macos-14
+          - target: ios
+            os: macos-14
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2
+        with:
+          channel: stable
+          flutter-version: ${{ matrix.version }}
+          cache: true
+      - name: Install Linux build tools
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev
+      - run: flutter pub get
+      - run: flutter test --no-pub
+      - run: dart run tool/smoke_consumer.dart --platform=${{ matrix.target }}
   package-score:
-    needs: quality
+    needs: [quality, platform-builds]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
