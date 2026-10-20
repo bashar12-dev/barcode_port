@@ -1,6 +1,7 @@
 # Release checklist
 
 Release owner: Bashar Alhammadi (`bashar12-dev`). First public version: **1.0.0**.
+The approved documentation patch is **1.0.1**.
 The standalone repository is the source of releases. Review the exact candidate
 commit and archive before uploading; package versions cannot be overwritten.
 
@@ -41,7 +42,7 @@ the described interactions actually took place. A build, synthetic key injection
 or an unspecified successful-use report is not a replacement for these runs.
 
 ```sh
-dart run tool/verify_release.dart --version 1.0.0
+dart run tool/verify_release.dart --version 1.0.1
 ```
 
 Automated releases require this command to pass. Releases after 1.0.1 require
@@ -62,16 +63,16 @@ The maintainer also explicitly approved the documentation-only 1.0.1 patch on
 identical to 1.0.0 and retains the same disclosed verification limits. This
 second manual publication does not add physical qualification evidence.
 
-## First publication
+## First publication and manual documentation patch
 
 - [ ] Set the GitHub default branch to `main`, enable private vulnerability reporting, and protect release tags if available.
 - [ ] Verify the MIT notice and third-party provenance; no manufacturer SDK is bundled.
 - [ ] Keep `PUB_PUBLISH_ENABLED` unset/false until the first manual publication succeeds.
 - [ ] Commit the complete candidate, check a clean Git status, and verify all automated quality checks and the first-release decision above.
-- [ ] Create `v1.0.0`, matching `pubspec.yaml`.
+- [ ] Create the version tag matching `pubspec.yaml`: `v1.0.0` initially, `v1.0.1` for the documentation patch.
 - [ ] Sign in with the owner's Google account and run `flutter pub publish` from the tagged package root.
 - [ ] Verify the pub.dev page, API docs, example, license, and scores.
-- [ ] In a new consumer use hosted `barcode_port: ^1.0.0` without overrides and verify Android registration/build.
+- [ ] In a new consumer use hosted `barcode_port: ^1.0.1` without overrides and verify Android registration/build.
 - [ ] Publish GitHub release notes only after the package upload is confirmed.
 
 After pub.dev confirms the upload, run the **Verify hosted package** workflow
