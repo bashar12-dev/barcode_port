@@ -6,7 +6,7 @@ Hardware barcode input for Flutter on Android.
 [![CI](https://github.com/bashar12-dev/barcode_port/actions/workflows/ci.yml/badge.svg)](https://github.com/bashar12-dev/barcode_port/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/bashar12-dev/barcode_port/blob/main/LICENSE)
 
-[Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©](https://github.com/bashar12-dev/barcode_port/blob/main/README.ar.md) Â· [API](https://pub.dev/documentation/barcode_port/latest/) Â· [Example](https://github.com/bashar12-dev/barcode_port/tree/main/example) Â· [Device qualification](https://github.com/bashar12-dev/barcode_port/blob/main/doc/device-compatibility.md)
+[العربية](https://github.com/bashar12-dev/barcode_port/blob/main/README.ar.md) · [API](https://pub.dev/documentation/barcode_port/latest/) · [Example](https://github.com/bashar12-dev/barcode_port/tree/main/example) · [Device qualification](https://github.com/bashar12-dev/barcode_port/blob/main/doc/device-compatibility.md)
 
 Receive keyboard-wedge HID input and Android iMin broadcasts through one API.
 A focused text field is not required. Keep product lookup, inventory, and checkout
@@ -157,7 +157,7 @@ final scanner = Scanner(
 );
 ```
 
-Order: normalize â†’ trim â†’ reject empty â†’ filter â†’ consecutive-repeat check â†’
+Order: normalize → trim → reject empty → filter → consecutive-repeat check →
 deliver. Normalization preserves the event ID and UTC timestamp. Defaults do not
 normalize/filter/suppress repeats and pass through the same event object.
 
@@ -219,8 +219,8 @@ changing compile-time flags. See the [example guide](https://github.com/bashar12
 
 ## Development and support
 
-[Contributing](https://github.com/bashar12-dev/barcode_port/blob/main/CONTRIBUTING.md) Â· [Support](https://github.com/bashar12-dev/barcode_port/blob/main/SUPPORT.md) Â·
-[Security](https://github.com/bashar12-dev/barcode_port/blob/main/SECURITY.md) Â· [Release checklist](https://github.com/bashar12-dev/barcode_port/blob/main/doc/releasing.md) Â·
+[Contributing](https://github.com/bashar12-dev/barcode_port/blob/main/CONTRIBUTING.md) · [Support](https://github.com/bashar12-dev/barcode_port/blob/main/SUPPORT.md) ·
+[Security](https://github.com/bashar12-dev/barcode_port/blob/main/SECURITY.md) · [Release checklist](https://github.com/bashar12-dev/barcode_port/blob/main/doc/releasing.md) ·
 [Changelog](https://github.com/bashar12-dev/barcode_port/blob/main/CHANGELOG.md)
 
 Report a device issue with its model, Android/firmware version, connection mode,
