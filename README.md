@@ -47,7 +47,7 @@ Or add:
 
 ```yaml
 dependencies:
-  barcode_port: ^1.0.0
+  barcode_port: ^1.0.1
 ```
 
 ## Quick start

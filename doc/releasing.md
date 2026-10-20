@@ -44,7 +44,7 @@ or an unspecified successful-use report is not a replacement for these runs.
 dart run tool/verify_release.dart --version 1.0.0
 ```
 
-Automated releases require this command to pass. Releases after 1.0.0 require
+Automated releases require this command to pass. Releases after 1.0.1 require
 completed physical qualification before tagging or publishing. Update the
 compatibility table with actual qualified models only after these runs pass.
 
@@ -56,6 +56,11 @@ versions, transport coverage and detailed qualification results are unknown.
 This is a documented exception for the first manual release only; it is not
 evidence that the physical qualification gate passed. No model is certified.
 The automated physical gate remains strict and no test results are fabricated.
+
+The maintainer also explicitly approved the documentation-only 1.0.1 patch on
+2026-10-20 to correct README text encoding. Its scanner implementation is
+identical to 1.0.0 and retains the same disclosed verification limits. This
+second manual publication does not add physical qualification evidence.
 
 ## First publication
 

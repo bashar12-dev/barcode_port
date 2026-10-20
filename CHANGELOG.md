@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.1
+
+- Correct the Arabic link label, separators, and processing arrows in the English README.
+- Refresh documentation installation examples for the patch release.
+- Keep scanner behavior, public Dart APIs, and native channel protocols unchanged.
+
 ## 1.0.0
 
 - Receive keyboard-wedge HID and Android iMin broadcast input through one API.

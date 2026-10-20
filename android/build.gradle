@@ -1,5 +1,5 @@
 group = 'com.ultimate.pos.scanner_bridge'
-version = '1.0.0'
+version = '1.0.1'
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 android {

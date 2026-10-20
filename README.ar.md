@@ -37,7 +37,7 @@ Dart ‏3.10.7 فأحدث، وFlutter ‏3.38.6 فأحدث، وAndroid API 24 ف
 flutter pub add barcode_port
 ```
 
-أو أضف `barcode_port: ^1.0.0` إلى `dependencies`.
+أو أضف `barcode_port: ^1.0.1` إلى `dependencies`.
 
 ## البدء
 

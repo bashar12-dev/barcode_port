@@ -25,10 +25,12 @@ by inference. Retain an accompanying Markdown report in `doc/hardware/` containi
 setup, sequence, synthetic test values or their specification, observed counts,
 failures, and the tested commit. Do not include device serial numbers or customer
 data. Both `hid` and `iminBroadcast` records are required for automated releases
-and releases after 1.0.0. The maintainer approved the first manual 1.0.0 release
+and releases after 1.0.1. The maintainer approved the first manual 1.0.0 release
 based on the successful-use report with these verification limits disclosed;
 see [the first-release decision](releasing.md#first-manual-release-decision-100).
 This decision does not qualify either transport or any device model.
+The documentation-only 1.0.1 patch uses the identical scanner implementation
+and the same disclosed verification limits, with explicit maintainer approval.
 
 Each run needs the model, Android/firmware versions, connection, output settings,
 operator, UTC date, tested commit, 100 expected and 100 received frames with exact
