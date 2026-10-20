@@ -36,7 +36,7 @@ Enter or Tab suffix by default. The operating system handles the connection.
 The shared HID implementation uses Dart and Flutter only; no additional native
 scanner plugin or manufacturer SDK is required on the new platforms.
 
-This source prepares **1.1.0**; see [platform validation](doc/platform-validation.md)
+This source prepares **1.1.0**; see [platform validation](https://github.com/bashar12-dev/barcode_port/blob/main/doc/platform-validation.md)
 for candidate status, build evidence, and outstanding physical-reader checks.
 
 See the [qualification records](https://github.com/bashar12-dev/barcode_port/blob/main/doc/device-compatibility.md) for actual tested
