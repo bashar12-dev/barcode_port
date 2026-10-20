@@ -1,6 +1,6 @@
 # BarcodePort: shared Flutter keyboard input across platforms
 
-Status: proposed for maintainer approval; implementation has not started.
+Status: approved by the maintainer on 2026-10-20 for implementation.
 
 ## Intent and agreed constraint
 
@@ -10,9 +10,8 @@ requests the approach used by a Flutter HID listener, without new native scanner
 implementations like the Android integration. A scanner must already present its
 output to the operating system as keyboard input.
 
-The existing Android iMin integration remains in place. This is the author's
-interpretation of extending the other platforms, not approval to remove or
-replace existing Android functionality. Android HID also keeps its behavior.
+The maintainer explicitly confirmed that Android remains unchanged: retain both
+HID and iMin broadcast integration, with their existing behavior and APIs.
 
 ## Scope and support contract
 
