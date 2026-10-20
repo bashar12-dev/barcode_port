@@ -12,6 +12,8 @@ commit and archive before uploading; package versions cannot be overwritten.
 - [ ] Handwritten-code coverage is recorded with generated code excluded.
 - [ ] Example and fresh external consumer build on Android on both SDK endpoints.
 - [ ] Web demonstration builds; this does not qualify an additional platform.
+- [ ] For 1.1.0+, fresh consumers build on all six declared targets on minimum/stable SDKs; Chrome routing tests pass, including web-on-Android.
+- [ ] Review `platform-validation.md`; distinguish successful builds/synthetic events from actual reader qualification on each target.
 - [ ] Pana runs on a temporary copy; investigate its report and fix actionable issues.
 - [ ] `flutter pub publish --dry-run` passes from a clean candidate; inspect every archive path.
 - [ ] Archive includes LICENSE, public docs, example, native and generated source; no secrets or parent application files.

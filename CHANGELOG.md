@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.1.0 (unreleased)
+
+- Support keyboard-wedge input through shared Dart/Flutter code on Windows,
+  macOS, Linux, web, and iOS, without new native scanner implementations.
+- Select HID directly outside native Android, including Android browsers.
+- Report UnsupportedError for explicit default iMin mode outside Android;
+  preserve custom ScannerPlatform injection and cleanup after failed starts.
+- Keep Android bridge, iMin protocol, HID defaults, and public APIs unchanged.
+- Add all-platform consumer builds, browser routing tests, and support guidance.
+
 ## 1.0.1
 
 - Correct the Arabic link label, separators, and processing arrows in the English README.

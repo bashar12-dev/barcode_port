@@ -2,7 +2,8 @@
 
 ## Implementation and verified hardware
 
-Android HID keyboard-wedge input and iMin broadcast input are implemented.
+Flutter HID keyboard-wedge input is implemented on Android, iOS, Windows, macOS,
+Linux, and web. Android iMin broadcast input retains its existing implementation.
 A model is listed as verified only when an actual device qualification record
 covers both the input behavior and lifecycle checks in the release checklist.
 
@@ -14,8 +15,9 @@ The maintainer reported successful use, but the device model, Android version,
 and transport were not available. This is a user report, not a documented test
 of either transport or a certification for a named device.
 
-The web example verifies keyboard-event handling only. Unit/widget tests and
-Android builds do not establish physical HID or iMin compatibility. Do not infer
+See [platform validation](platform-validation.md) for automated and runtime
+evidence. Browser tests verify keyboard-event handling only. Unit/widget tests
+and platform builds do not establish physical HID or iMin compatibility. Do not infer
 support for camera decoding, serial, BLE/SPP, discovery, or background scanning.
 
 ## Recording a run

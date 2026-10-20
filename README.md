@@ -1,6 +1,6 @@
 # BarcodePort
 
-Hardware barcode input for Flutter on Android.
+Hardware barcode input for Flutter on Android, iOS, Windows, macOS, Linux, and web.
 
 [![pub package](https://img.shields.io/pub/v/barcode_port.svg)](https://pub.dev/packages/barcode_port)
 [![CI](https://github.com/bashar12-dev/barcode_port/actions/workflows/ci.yml/badge.svg)](https://github.com/bashar12-dev/barcode_port/actions/workflows/ci.yml)
@@ -8,7 +8,7 @@ Hardware barcode input for Flutter on Android.
 
 [العربية](https://github.com/bashar12-dev/barcode_port/blob/main/README.ar.md) · [API](https://pub.dev/documentation/barcode_port/latest/) · [Example](https://github.com/bashar12-dev/barcode_port/tree/main/example) · [Device qualification](https://github.com/bashar12-dev/barcode_port/blob/main/doc/device-compatibility.md)
 
-Receive keyboard-wedge HID input and Android iMin broadcasts through one API.
+Receive keyboard-wedge input across platforms and Android iMin broadcasts through one API.
 A focused text field is not required. Keep product lookup, inventory, and checkout
 rules in your application.
 
@@ -22,20 +22,33 @@ rules in your application.
 
 ## Support and requirements
 
-| Input | Android | Notes |
+| Platform | Keyboard-wedge HID | iMin broadcasts |
 |---|---|---|
-| Keyboard-wedge HID | Implemented | USB or Bluetooth readers configured to send keyboard input; Enter or Tab suffix by default. |
-| iMin broadcasts | Implemented | Requires a compatible broadcast action/payload and device configuration. |
-| Web HID demonstration | Example only | Exercises keyboard input; not an additional certified platform. |
+| Android | Supported | Supported with compatible broadcast configuration |
+| iOS / iPadOS | Supported through Flutter keyboard events | Unavailable |
+| Windows | Supported through Flutter keyboard events | Unavailable |
+| macOS | Supported through Flutter keyboard events | Unavailable |
+| Linux | Supported through Flutter keyboard events | Unavailable |
+| Web | Supported through Flutter keyboard events | Unavailable |
+
+USB or Bluetooth readers must be configured to send keyboard input, with an
+Enter or Tab suffix by default. The operating system handles the connection.
+The shared HID implementation uses Dart and Flutter only; no additional native
+scanner plugin or manufacturer SDK is required on the new platforms.
+
+This source prepares **1.1.0**; see [platform validation](doc/platform-validation.md)
+for candidate status, build evidence, and outstanding physical-reader checks.
 
 See the [qualification records](https://github.com/bashar12-dev/barcode_port/blob/main/doc/device-compatibility.md) for actual tested
 models and release status. An implementation is not a guarantee for every device.
 Camera scanning, BLE/SPP protocols, USB serial, scanner discovery, GS1 parsing,
 and background reception are outside the package's current scope.
 
-Requires Dart **3.10.7+**, Flutter **3.38.6+**, Android **API 24+**,
-compileSdk **36**, and Java/Kotlin target **17**. Android is the declared plugin
-platform. Native iMin support is not available on web, iOS, or desktop.
+Requires Dart **3.10.7+** and Flutter **3.38.6+**. Android additionally requires
+**API 24+**, compileSdk **36**, and Java/Kotlin target **17**. Other operating
+system requirements follow the selected Flutter SDK. Android is the only native
+plugin registration; the other targets use the same Flutter keyboard listener.
+Native iMin support is not available on web, iOS, or desktop.
 
 ## Install
 
@@ -47,7 +60,7 @@ Or add:
 
 ```yaml
 dependencies:
-  barcode_port: ^1.0.1
+  barcode_port: ^1.1.0
 ```
 
 ## Quick start
@@ -121,7 +134,7 @@ when it fails; ownership is retained until resources can be released safely.
 
 | Option | Default | Meaning |
 |---|---|---|
-| `mode` | `ScannerMode.auto` | Prefer iMin on matching host metadata; otherwise HID. |
+| `mode` | `ScannerMode.auto` | Native Android prefers iMin on matching metadata; all other targets select HID directly. |
 | `configureIminOutput` | `false` | Explicitly request broadcast output configuration on iMin. |
 | `frameTimeout` | 2 seconds | Discard an incomplete HID frame after an inter-character gap. |
 | `terminators` | Enter, Tab | Complete the current HID frame. |
@@ -132,6 +145,18 @@ HID receives keyboard events; it does not identify a USB scanner or reliably
 distinguish human typing. Entering an editable field immediately clears a partial
 HID frame. iMin broadcasts are independent of text-field focus. Disabling editable
 pass-through does not guarantee suppression of text entry by other Flutter handlers.
+
+The app window must receive keyboard input; on web the Flutter view/browser must
+have focus. This does not require a focused text field and cannot capture input
+sent to another application or browser tab. Match the scanner's keyboard layout
+to the operating system. Characters depend on events delivered by Flutter;
+IME composition and arbitrary binary payloads are not supported.
+
+Use `Scanner()` unchanged on every platform, or explicitly select
+`ScannerOptions(mode: ScannerMode.hid)`. With the default platform,
+`ScannerMode.iminBroadcast` throws `UnsupportedError` outside native Android,
+including a browser on Android. Supplying a custom `ScannerPlatform` remains
+authoritative. The low-level native `ScannerBridge` is Android-only.
 
 Auto mode selects one transport per start. It does not switch after a start error
 or infer hardware failure from a quiet period. Use an explicit mode when needed.
@@ -212,6 +237,8 @@ changing compile-time flags. See the [example guide](https://github.com/bashar12
 | Symptom | Check |
 |---|---|
 | HID read never completes | Scanner keyboard mode, Enter/Tab suffix, timeout, active screen, editable focus. |
+| Web/desktop receives no input | Active application/Flutter browser view, OS reader pairing, keyboard layout, and suffix. |
+| UnsupportedError in iMin mode | Use auto/HID outside native Android; iMin broadcasts require Android. |
 | Ordinary typing becomes a scan | HID receives keyboard input; choose screen eligibility and device configuration deliberately. |
 | Duplicate-owner error | Await the old owner's stop/dispose before starting a new owner. |
 | iMin sends no reads | Mode, actual broadcast configuration/action/payload, device firmware, and diagnostics/errors. |
