@@ -33,8 +33,8 @@ Dart ‏3.10.7 فأحدث وFlutter ‏3.38.6 فأحدث. يحتاج Android أ�
 يتولى نظام التشغيل توصيله. دعم المنصات الجديدة مبني بـDart وFlutter فقط، دون إضافة
 كود أصلي خاص بالقارئ أو حزم الشركات المصنّعة. يبقى تكامل Android الحالي كما هو.
 
-هذا المصدر يجهّز الإصدار **1.1.0**. راجع [فحوص المنصات](https://github.com/bashar12-dev/barcode_port/blob/main/doc/platform-validation.md)
-لمعرفة حالة النسخة ونتائج البناء وما ينتظر تجربة قارئ فعلي.
+راجع [فحوص المنصات](https://github.com/bashar12-dev/barcode_port/blob/main/doc/platform-validation.md)
+لمعرفة نتائج بناء الإصدار **1.1.0** وما ينتظر تجربة قارئ فعلي.
 
 راجع [سجل الأجهزة](https://github.com/bashar12-dev/barcode_port/blob/main/doc/device-compatibility.md) لمعرفة الموديلات التي اجتازت
 التحقق الفعلي وحالة جاهزية الإصدار. لا تعني التقنية المدعومة ضمان كل الموديلات.
@@ -47,7 +47,7 @@ Dart ‏3.10.7 فأحدث وFlutter ‏3.38.6 فأحدث. يحتاج Android أ�
 flutter pub add barcode_port
 ```
 
-أو أضف `barcode_port: ^1.1.0` إلى `dependencies` بعد نشر الإصدار.
+أو أضف `barcode_port: ^1.1.0` إلى `dependencies`.
 
 ## البدء
 

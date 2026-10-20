@@ -36,8 +36,8 @@ Enter or Tab suffix by default. The operating system handles the connection.
 The shared HID implementation uses Dart and Flutter only; no additional native
 scanner plugin or manufacturer SDK is required on the new platforms.
 
-This source prepares **1.1.0**; see [platform validation](https://github.com/bashar12-dev/barcode_port/blob/main/doc/platform-validation.md)
-for candidate status, build evidence, and outstanding physical-reader checks.
+See [platform validation](https://github.com/bashar12-dev/barcode_port/blob/main/doc/platform-validation.md)
+for 1.1.0 build evidence and outstanding physical-reader checks.
 
 See the [qualification records](https://github.com/bashar12-dev/barcode_port/blob/main/doc/device-compatibility.md) for actual tested
 models and release status. An implementation is not a guarantee for every device.
@@ -56,9 +56,7 @@ Native iMin support is not available on web, iOS, or desktop.
 flutter pub add barcode_port
 ```
 
-The commands above install the published release. This branch prepares 1.1.0;
-use a local path or this Git branch to try the unpublished candidate. After its
-publication, add:
+Or add:
 
 ```yaml
 dependencies:

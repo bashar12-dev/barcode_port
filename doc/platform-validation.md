@@ -1,7 +1,8 @@
-# Platform validation — 1.1.0 candidate
+# Platform validation — 1.1.0
 
-This candidate is not published. Version 1.0.1 remains the published release
-until a new version is explicitly released. Updated on 2026-10-20.
+The maintainer instructed manual publication of 1.1.0 on 2026-10-20 after delivery
+of this validation report. See [release authorization](releasing.md#manual-release-authorization-110)
+for the decision and the verification limits, which remain unchanged.
 
 ## Implementation
 
@@ -78,5 +79,6 @@ Flutter 3.38.6 and latest stable are both checked by CI.
 
 Record actual reader model, OS/browser version, connection mode, keyboard layout,
 suffix, tested commit, and lifecycle/content results before qualifying a new
-configuration. No named hardware is newly certified by this candidate. Existing
-release hardware gates and the disabled automated publisher remain in force.
+configuration. No named hardware is newly certified by this release. The physical
+validator and disabled automated publisher remain in force; the maintainer's
+specific manual authorization does not supply missing hardware evidence.
