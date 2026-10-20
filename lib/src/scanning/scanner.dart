@@ -5,6 +5,7 @@ import 'scanner_options.dart';
 import 'scanner_platform.dart';
 import 'processing_scanner.dart';
 import 'scan_processing_options.dart';
+import 'default_scanner_platform.dart';
 
 /// Convenient owner of a single active scanner transport.
 final class Scanner extends ResolvingScanner {
@@ -12,12 +13,14 @@ final class Scanner extends ResolvingScanner {
   ///
   /// [options] selects transport and input policy. [processing] is disabled by
   /// default. Configuring device output requires an explicit opt-in in options.
+  /// Auto mode uses keyboard input outside native Android. Explicit iMin mode
+  /// throws [UnsupportedError] there, unless a custom [platform] is supplied.
   factory Scanner({
     ScannerOptions options = const ScannerOptions(),
     ScannerPlatform? platform,
     ScanProcessingOptions processing = const ScanProcessingOptions(),
   }) {
-    final host = platform ?? BridgeScannerPlatform();
+    final host = platform ?? createDefaultScannerPlatform();
     return Scanner._(options, host, processing);
   }
 

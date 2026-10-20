@@ -2,13 +2,16 @@ import 'package:flutter/services.dart';
 
 /// The input transport selected for a reception session.
 enum ScannerMode {
-  /// Inspects host metadata and falls back to HID if inspection fails.
+  /// Uses HID outside native Android; otherwise inspects host metadata and
+  /// falls back to HID if inspection fails.
   auto,
 
   /// Receives keyboard-wedge input without native host inspection.
   hid,
 
   /// Receives Android iMin broadcasts without automatic HID fallback.
+  ///
+  /// The default platform throws [UnsupportedError] outside native Android.
   iminBroadcast,
 }
 
